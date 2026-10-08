@@ -47,7 +47,28 @@ function App() {
       }
 
       const data = await response.json()
-      setProjectIdea(data.result)
+
+      const result = data.result
+
+      setProjectIdea({
+        ...result,
+
+        technologyStack:
+          result.technologyStack?.length
+            ? result.technologyStack
+            : skills
+                .split(',')
+                .map((skill: string) => skill.trim())
+                .filter(Boolean),
+
+        resumeBullet:
+          result.resumeBullet ||
+          `Built ${result.title}, an AI-powered project recommendation tool using React, Node.js, Express and Ollama.`,
+
+        readmeDescription:
+          result.readmeDescription ||
+          `IdeaForge AI is a full-stack AI-powered project recommendation tool that helps students discover practical software projects based on their skills, interests, experience level, and target career role.`
+      })
     } catch (error) {
       console.error(error)
       alert('Something went wrong. Please check that the backend is running.')
@@ -221,12 +242,18 @@ function App() {
 
               <article className="result-card highlight">
                 <h3>Resume Bullet</h3>
-                <p>{projectIdea.resumeBullet}</p>
+                <p>
+                  {projectIdea.resumeBullet ||
+                    `Built ${projectIdea.title}, an AI-powered project recommendation tool using React, Node.js, Express and Ollama.`}
+                </p>
               </article>
 
               <article className="result-card highlight">
                 <h3>README Description</h3>
-                <p>{projectIdea.readmeDescription}</p>
+                <p>
+                  {projectIdea.readmeDescription ||
+                    `IdeaForge AI is a full-stack AI-powered project recommendation tool that helps students discover practical software projects based on their skills, interests, experience level, and target career role.`}
+                </p>
               </article>
             </div>
           </section>
